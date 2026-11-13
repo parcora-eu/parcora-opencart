@@ -1,0 +1,22 @@
+#!/bin/sh
+# Builds the installable archive: dist/oc4/parcora.ocmod.zip.
+# OpenCart takes the extension code from the file name, so it must stay
+# parcora.ocmod.zip; each OpenCart version gets its own dist folder.
+set -e
+
+cd "$(dirname "$0")/.."
+
+target=oc4
+build="build/$target"
+
+rm -rf "$build" "dist/$target"
+mkdir -p "$build/system/library/parcora" "dist/$target"
+
+cp -R "src/$target/." "$build/"
+cp -R src/core/. "$build/system/library/parcora/"
+
+(cd "$build" && zip -qr "../../dist/$target/parcora.ocmod.zip" .)
+
+rm -rf build
+
+echo "dist/$target/parcora.ocmod.zip"

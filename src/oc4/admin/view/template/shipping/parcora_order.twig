@@ -1,0 +1,62 @@
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <td class="w-25">{{ column_service }}</td>
+      <td><code>{{ service }}</code></td>
+    </tr>
+    {% if pickup_point %}
+      <tr>
+        <td>{{ text_pickup_point }}</td>
+        <td>{{ pickup_point.name }} <code>{{ pickup_point.id }}</code></td>
+      </tr>
+    {% endif %}
+    {% if shipment.shipment_id %}
+      <tr>
+        <td>{{ text_shipment }}</td>
+        <td><code>{{ shipment.shipment_id }}</code> <span class="badge bg-info">{{ shipment.status }}</span></td>
+      </tr>
+      <tr>
+        <td>{{ text_tracking }}</td>
+        <td>{% if shipment.tracking_url %}<a href="{{ shipment.tracking_url }}" target="_blank">{{ shipment.tracking_number ?: shipment.tracking_url }}</a>{% else %}{{ shipment.tracking_number }}{% endif %}</td>
+      </tr>
+    {% endif %}
+  </tbody>
+</table>
+{% if shipment.error %}
+  <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{ shipment.error }}</div>
+{% endif %}
+{% if shipment.shipment_id %}
+  <a href="{{ label }}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-print"></i> {{ button_label }}</a>
+{% else %}
+  {% if not shipment.error %}<p>{{ text_no_shipment }}</p>{% endif %}
+  <button type="button" id="button-parcora-create" class="btn btn-primary"><i class="fa-solid fa-truck"></i> {{ button_create_shipment }}</button>
+  <script type="text/javascript"><!--
+  $('#button-parcora-create').on('click', function() {
+      var element = this;
+
+      $.ajax({
+          url: '{{ create|escape('js') }}',
+          type: 'post',
+          dataType: 'json',
+          beforeSend: function() {
+              $(element).button('loading');
+          },
+          complete: function() {
+              $(element).button('reset');
+          },
+          success: function(json) {
+              if (json['error']) {
+                  $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+              }
+
+              if (json['success']) {
+                  location.reload();
+              }
+          },
+          error: function(xhr, ajaxOptions, thrownError) {
+              console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+          }
+      });
+  });
+  //--></script>
+{% endif %}

@@ -1,0 +1,25 @@
+# Local OpenCart 4 stand: http://localhost:8091 (admin: /admin, admin / admin12345).
+services:
+  opencart:
+    build: docker
+    ports:
+      - "8091:80"
+    environment:
+      OPENCART_URL: http://localhost:8091/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: opencart
+      MARIADB_USER: opencart
+      MARIADB_PASSWORD: opencart
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  db:

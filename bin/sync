@@ -1,0 +1,11 @@
+#!/bin/sh
+# Copies the working tree into the running Docker stand's installed extension,
+# so changes show up without reinstalling the archive.
+set -e
+
+cd "$(dirname "$0")/.."
+
+container=$(docker compose ps -q opencart)
+
+docker cp src/oc4/. "$container:/var/www/html/extension/parcora/"
+docker cp src/core/. "$container:/var/www/html/extension/parcora/system/library/parcora/"

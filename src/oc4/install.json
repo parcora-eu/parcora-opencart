@@ -1,0 +1,7 @@
+{
+  "name": "Parcora Shipping",
+  "description": "Multi-carrier shipping for Europe: live rates, parcel lockers and pickup points at checkout, shipments, labels and tracking via the Parcora API.",
+  "version": "0.1.0",
+  "author": "Parcora",
+  "link": "https://parcora.eu"
+}
